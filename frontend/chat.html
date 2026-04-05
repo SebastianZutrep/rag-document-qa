@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>RAG AI Chat</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico">
+
+    <!-- Fuente moderna -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <!-- 🔵 SIDEBAR -->
+    <aside class="sidebar">
+        <h2 class="logo">🤖 RAG AI</h2>
+
+        <button class="new-chat-btn" id="new-chat-btn">
+            + Nuevo Chat
+        </button>
+
+        <!-- 📂 UPLOAD BONITO -->
+        <div class="upload-section">
+
+            <!-- input oculto -->
+            <input type="file" id="pdf-upload" accept="application/pdf">
+
+            <!-- botón bonito -->
+            <label for="pdf-upload" class="file-label">
+                📄 Seleccionar PDF
+            </label>
+
+            <!-- nombre archivo -->
+            <div id="file-name" class="file-name"></div>
+
+            <!-- botón subir -->
+            <button id="upload-btn" class="upload-btn">
+                Subir PDF
+            </button>
+
+        </div>
+    </aside>
+
+
+    <!-- ⚫ MAIN CHAT -->
+    <main class="chat-container">
+
+        <!-- 💬 MENSAJES -->
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot">
+                Hola 👋 Soy tu asistente RAG. Sube un PDF y hazme preguntas.
+            </div>
+        </div>
+
+        <!-- ✍️ INPUT -->
+        <div class="chat-input-container">
+            <input 
+                type="text" 
+                id="chat-input" 
+                placeholder="Escribe tu pregunta..."
+            >
+            <button id="send-btn">Enviar</button>
+        </div>
+
+    </main>
+
+</div>
+
+<!-- JS -->
+<script src="chat.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
