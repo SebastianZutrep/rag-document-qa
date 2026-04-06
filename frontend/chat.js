@@ -5,9 +5,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const uploadBtn = document.getElementById("upload-btn");
     const fileInput = document.getElementById("pdf-upload");
 
-    // ==========================
+    
     // MOSTRAR MENSAJE
-    // ==========================
+ 
     function addMessage(text, role) {
         const div = document.createElement("div");
         div.classList.add("message", role);
@@ -17,9 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
         messages.scrollTop = messages.scrollHeight;
     }
 
-    // ==========================
     // ENVIAR PREGUNTA
-    // ==========================
     if (sendBtn) {
         sendBtn.addEventListener("click", () => {
             console.log("Send button clicked");
@@ -75,9 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // ==========================
     // SUBIR PDF
-    // ==========================
     if (uploadBtn) {
         uploadBtn.addEventListener("click", async () => {
             console.log("Upload button clicked");
@@ -120,9 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ==========================
     // NUEVO CHAT
-    // ==========================
     const newChatBtn = document.getElementById("new-chat-btn");
 
     if (newChatBtn) {
@@ -130,15 +124,13 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log("New chat button clicked");
             messages.innerHTML = `
                 <div class="message bot">
-                    Nuevo chat iniciado 🚀
+                    Nuevo chat iniciado
                 </div>
             `;
         });
     }
 
-    // ==========================
     // VALIDACIÓN DE USER_ID
-    // ==========================
     const user_id = localStorage.getItem("user_id");
 
     if (!user_id) {
