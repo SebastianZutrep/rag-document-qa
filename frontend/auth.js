@@ -1,5 +1,5 @@
 // ==========================
-// 🔑 LOGIN
+// LOGIN
 // ==========================
 const loginBtn = document.getElementById("login-btn");
 
@@ -47,7 +47,7 @@ if (loginBtn) {
 
 
 // ==========================
-// 📝 REGISTER
+// REGISTER
 // ==========================
 const registerBtn = document.getElementById("register-btn");
 
