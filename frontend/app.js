@@ -1,5 +1,5 @@
 // ==========================
-// 🔐 VERIFICAR LOGIN
+// VERIFICAR LOGIN
 // ==========================
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -7,12 +7,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const currentPage = window.location.pathname;
 
-    // Si está en chat y NO está logueado → lo mando a login
+    // Si está en chat y no está logueado, lo mando a login
     if (currentPage.includes("chat.html") && !token) {
         window.location.href = "index.html";
     }
 
-    // Si está logueado y entra a login/register → lo mando al chat
+    // Si está logueado y entra a login/register, lo mando al chat
     if ((currentPage.includes("index.html") || currentPage.includes("register.html")) && token) {
         window.location.href = "chat.html";
     }
@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // ==========================
-// 🚪 LOGOUT
+// LOGOUT
 // ==========================
 function logout() {
     localStorage.removeItem("access_token");
