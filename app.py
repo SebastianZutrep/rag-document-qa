@@ -19,6 +19,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
  
+ALLOWED_EXTENSIONS = {".pdf", ".docx", ".doc", ".xlsx", ".xls", ".csv",
+                      ".png", ".jpg", ".jpeg", ".tiff", ".bmp", ".webp"}
+ 
 @app.post("/register")
 async def register(request: Request):
     try:
@@ -48,7 +51,6 @@ async def login_user(request: Request):
         print(f"Login exitoso para user_id: {user.id}")
         return {"access_token": session.access_token, "user_id": user.id}
     except Exception as e:
-        print(f"Error en el login: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error al iniciar sesión: {str(e)}")
  
 @app.post("/ask")
@@ -61,7 +63,6 @@ async def ask(request: Request):
             raise HTTPException(status_code=400, detail="La pregunta es requerida.")
         if not user_id:
             raise HTTPException(status_code=400, detail="El user_id es requerido.")
-        print(f"Recibiendo pregunta para user_id: {user_id}")
         answer, context = ask_question(question, user_id)
         return {"answer": answer, "context": context}
     except Exception as e:
@@ -76,6 +77,14 @@ async def upload(
         if not user_id:
             raise HTTPException(status_code=400, detail="El user_id es requerido.")
  
+        # Validar extensión
+        ext = os.path.splitext(file.filename)[1].lower()
+        if ext not in ALLOWED_EXTENSIONS:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Formato '{ext}' no soportado. Formatos aceptados: {', '.join(ALLOWED_EXTENSIONS)}"
+            )
+ 
         file_path = f"data/documents/{file.filename}"
         with open(file_path, "wb") as f:
             f.write(await file.read())
@@ -86,5 +95,9 @@ async def upload(
         process_document(file_path, user_id, document_id)
  
         return {"message": "Documento procesado correctamente."}
+ 
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al subir el documento: {str(e)}")
+ 
