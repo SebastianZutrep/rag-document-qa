@@ -1,18 +1,28 @@
-# UI
-streamlit==1.35.0
-
+# Web framework
+fastapi
+uvicorn
+ 
 # Documentos
-PyPDF2==3.0.1
-pdfplumber==0.11.0
-
-# Embeddings locales
+pymupdf
+python-docx
+openpyxl
+pandas
+pillow
+pytesseract
+ 
+# Embeddings
 sentence-transformers==3.0.1
-
+ 
 # Vector DB
 chromadb==0.5.3
-
+ 
 # LLM
 google-generativeai==0.7.2
-
+google-genai
+ 
+# Auth
+supabase
+ 
 # Utilidades
 python-dotenv==1.0.1
+python-multipart
