@@ -1,62 +1,117 @@
-import chromadb
+import os
+from dotenv import load_dotenv
+from google import genai
  
-# Cliente persistente (API moderna de ChromaDB)
-client = chromadb.PersistentClient(path="chroma_db")
+from src.document_loader import load_document  # <-- cambiado
+from src.text_splitter import split_text
+from src.embeddings import get_embeddings
+from src.vector_store import store_embeddings, query_embeddings, clear_user_embeddings, user_has_documents
  
-# Crear o recuperar la colección
-collection = client.get_or_create_collection(name="documents")
+load_dotenv()
+ 
+api_key = os.getenv("GOOGLE_API_KEY")
+if not api_key:
+    raise ValueError("No se encontró GOOGLE_API_KEY en el archivo .env")
+ 
+client = genai.Client(api_key=api_key)
  
 # =========================
-# LIMPIAR EMBEDDINGS DEL USUARIO
+# PROCESAR DOCUMENTO
 # =========================
-def clear_user_embeddings(user_id):
-    print(f"Limpiando embeddings para user_id: {user_id}")
+def process_document(file_path, user_id, document_id):
     try:
-        results = collection.get(where={"user_id": user_id})
-        if results and results["ids"]:
-            collection.delete(ids=results["ids"])
-            print(f"Eliminados {len(results['ids'])} chunks anteriores.")
-        else:
-            print("No había embeddings previos.")
+        if not user_id:
+            raise ValueError("El user_id es requerido para procesar el documento.")
+        if not document_id:
+            raise ValueError("El document_id es requerido para procesar el documento.")
+ 
+        # 1. Borrar embeddings anteriores del usuario
+        clear_user_embeddings(user_id)
+ 
+        # 2. Leer documento (cualquier formato)
+        text = load_document(file_path)
+ 
+        if not text or not text.strip():
+            raise ValueError("No se pudo extraer texto del documento.")
+ 
+        # 3. Dividir en chunks
+        chunks = split_text(text)
+        if not chunks:
+            raise ValueError("No se generaron chunks del documento.")
+ 
+        # 4. Crear embeddings
+        embeddings = get_embeddings(chunks)
+        if not embeddings or len(embeddings) != len(chunks):
+            raise ValueError("Error generando embeddings.")
+ 
+        print(f"Embeddings generados: {len(embeddings)} para user_id: {user_id}")
+ 
+        # 5. Guardar en vector DB
+        store_embeddings(chunks, embeddings, user_id, document_id)
+ 
+        return True
+ 
     except Exception as e:
-        print(f"Error al limpiar embeddings: {e}")
+        raise RuntimeError(f"Error en process_document: {e}")
+ 
  
 # =========================
-# VERIFICAR SI EL USUARIO TIENE DOCUMENTOS
+# GENERAR RESPUESTA (LLM)
 # =========================
-def user_has_documents(user_id):
+def generate_answer(context, question):
+    prompt = f"""
+Eres un asistente experto en análisis de documentos.
+ 
+Instrucciones:
+- Responde usando SOLO la información del contexto proporcionado.
+- Integra la información de todos los fragmentos relevantes.
+- No inventes información.
+- Si la respuesta no está en el contexto, responde exactamente: "No se encontró información suficiente en el documento".
+- Evita copiar texto literal; parafrasea y sintetiza.
+- Prioriza precisión sobre creatividad.
+- Responde de forma clara, coherente y en español.
+ 
+Contexto:
+{context}
+ 
+Pregunta:
+{question}
+ 
+Respuesta:
+"""
     try:
-        results = collection.get(where={"user_id": user_id})
-        return bool(results and results["ids"])
-    except Exception as e:
-        print(f"Error verificando documentos: {e}")
-        return False
- 
-# =========================
-# GUARDAR EMBEDDINGS
-# =========================
-def store_embeddings(chunks, embeddings, user_id, document_id):
-    print(f"Guardando {len(chunks)} chunks para user_id: {user_id}, document_id: {document_id}")
-    for i, (chunk, emb) in enumerate(zip(chunks, embeddings)):
-        doc_id = f"{user_id}_{document_id}_{i}"
-        collection.add(
-            documents=[chunk],
-            embeddings=[emb],
-            ids=[doc_id],
-            metadatas=[{"user_id": user_id, "document_id": document_id}]
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt
         )
-        print(f"Chunk almacenado ID: {doc_id}")
+        if not response or not response.text:
+            return "No se pudo generar una respuesta."
+        return response.text.strip()
+    except Exception as e:
+        return f"Error generando respuesta: {e}"
+ 
  
 # =========================
-# CONSULTAR EMBEDDINGS (filtrado por user_id)
+# PREGUNTAR AL SISTEMA
 # =========================
-def query_embeddings(query_embedding, user_id, n_results=3):
-    print(f"Consultando embeddings para user_id: {user_id}")
-    results = collection.query(
-        query_embeddings=[query_embedding],
-        n_results=n_results,
-        where={"user_id": user_id}
-    )
-    if not results or "documents" not in results or not results["documents"]:
-        return []
-    return results["documents"][0]
+def ask_question(question, user_id, top_k=3):
+    try:
+        if not user_id:
+            raise ValueError("El user_id es requerido.")
+ 
+        if not user_has_documents(user_id):
+            return "No has subido ningún documento. Por favor sube un archivo para poder responder tus preguntas.", []
+ 
+        query_embedding = get_embeddings([question])[0]
+        relevant_chunks = query_embeddings(query_embedding, user_id, top_k)
+ 
+        if not relevant_chunks:
+            return "No se encontró información suficiente en el documento.", []
+ 
+        context = "\n\n".join(relevant_chunks[:top_k])
+        answer = generate_answer(context, question)
+ 
+        return answer, relevant_chunks
+ 
+    except Exception as e:
+        return f"Error en el sistema RAG: {e}", []
