@@ -1,54 +1,8 @@
-# Entornos virtuales
-.venv/
-venv/
-env/
-
-# Archivos de entorno (MUY importante en RAG)
-.env
-.env.local
-.env.*
-
-# Archivos de datos / embeddings / índices (pueden ser pesados)
-*.faiss
-*.index
-*.pkl
-*.bin
-*.pt
-*.h5
-
-# Bases de datos locales (si usas)
-*.db
-*.sqlite3
-
-# Cachés y temporales
+# Crea el archivo .gitignore
+echo "venv/
 __pycache__/
-*.py[cod]
-*$py.class
-
-# Logs
-*.log
-
-# Jupyter
-.ipynb_checkpoints/
-
-# VS Code
-.vscode/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Archivos de build (si usas APIs o packaging)
-build/
-dist/
-*.egg-info/
-
-# Cache de herramientas de ML
-.cache/
-.mypy_cache/
-.pytest_cache/
-
-# LangChain / LlamaIndex (si usas)
-.chroma/
-.faiss/
-.llamaindex/
+*.pyc
+.env
+chroma_db/
+data/
+*.db" > .gitignore
