@@ -3,19 +3,19 @@ A web application that allows users to upload documents and ask questions about 
 
 ---
 
-## 🚀 Features
-* 📄 Upload documents (PDF, Word, Excel, CSV, Images)
-* 🧠 Automatic text processing and embeddings generation
-* 🔍 Semantic search using ChromaDB
-* 👁️ OCR support for scanned documents and images
-* 💬 Chat interface (ChatGPT-style)
-* 🔐 User authentication (register & login)
-* ⚡ FastAPI backend
-* 🎨 Modern frontend with HTML, CSS, and JavaScript
+## Features
+* Upload documents (PDF, Word, Excel, CSV, Images)
+* Automatic text processing and embeddings generation
+* Semantic search using ChromaDB
+* OCR support for scanned documents and images
+* Chat interface (ChatGPT-style)
+* User authentication (register & login)
+* FastAPI backend
+* Modern frontend with HTML, CSS, and JavaScript
 
 ---
 
-## 🧱 Architecture
+## Architecture
 ```
 Frontend (HTML/CSS/JS)
         ↓
@@ -30,7 +30,7 @@ AI Model (Gemini / embeddings)
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 ```
 rag-document-qa/
 │
@@ -63,7 +63,7 @@ rag-document-qa/
 
 ---
 
-## ⚙️ Installation
+## Installation
 
 ### 1. Clone the repository
 ```bash
@@ -114,7 +114,7 @@ GOOGLE_API_KEY=your_api_key
 
 ---
 
-## ▶️ Run the Application
+## Run the Application
 
 ### Backend (FastAPI)
 ```bash
@@ -137,7 +137,7 @@ http://localhost:5500
 
 ---
 
-## 🧪 Usage
+## Usage
 1. Register an account
 2. Log in
 3. Upload a document
@@ -145,18 +145,18 @@ http://localhost:5500
 
 ---
 
-## 📂 Supported File Formats
+## Supported File Formats
 | Format | Extension | OCR Support |
 |--------|-----------|-------------|
-| PDF | `.pdf` | ✅ (text + scanned) |
-| Word | `.docx`, `.doc` | ✅ (text + embedded images) |
-| Excel | `.xlsx`, `.xls` | ❌ |
-| CSV | `.csv` | ❌ |
-| Images | `.png`, `.jpg`, `.jpeg`, `.tiff`, `.bmp`, `.webp` | ✅ |
+| PDF    |  `.pdf`   |Yes (text + scanned) |
+| Word | `.docx`, `.doc` | Yes (text + embedded images) |
+| Excel | `.xlsx`, `.xls` | No |
+| CSV | `.csv` | No |
+| Images | `.png`, `.jpg`, `.jpeg`, `.tiff`, `.bmp`, `.webp` | No |
 
 ---
 
-## 🧠 How RAG Works
+## How RAG Works
 1. Upload a document
 2. Extract text (with OCR if needed)
 3. Split text into chunks
@@ -180,7 +180,7 @@ Each user's documents are isolated — uploading a new document replaces the pre
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 * Python
 * FastAPI
 * ChromaDB
@@ -192,7 +192,7 @@ Each user's documents are isolated — uploading a new document replaces the pre
 
 ---
 
-## 📈 Future Improvements
+## Future Improvements
 * Chat history
 * Multi-document support
 * Fully ChatGPT-like UI
@@ -201,15 +201,15 @@ Each user's documents are isolated — uploading a new document replaces the pre
 
 ---
 
-## 👨‍💻 Author
+## Author
 Sebastián Pertuz
 
 ---
 
-## ⭐ Contributing
+## Contributing
 Contributions are welcome! Feel free to open issues or submit pull requests.
 
 ---
 
-## 📄 License
+## License
 This project is licensed under the MIT License.
